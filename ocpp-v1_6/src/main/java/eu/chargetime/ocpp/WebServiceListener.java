@@ -96,6 +96,12 @@ public class WebServiceListener implements Listener {
         public SOAPMessage incomingRequest(SOAPMessageInfo messageInfo) {
             SOAPMessage message = messageInfo.getMessage();
             String identity = SOAPSyncHelper.getHeaderValue(message, "chargeBoxIdentity");
+
+            // Make pretty printed xml log entry
+            String str = PrettyHelper.getSOAPMessageAsString(message);
+            logger.debug("Request from " + identity);
+            logger.debug(str);
+
             if (!chargeBoxes.containsKey(identity)) {
                 String toUrl = SOAPSyncHelper.getHeaderValue(message, "From");
                 WebServiceReceiver webServiceReceiver = new WebServiceReceiver(toUrl, () -> removeChargebox(identity));
